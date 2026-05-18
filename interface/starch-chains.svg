@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 900" role="img" aria-labelledby="title desc">
+  <title id="title">Amylose and amylopectin starch-chain diagram</title>
+  <desc id="desc">Educational diagram comparing mostly linear amylose, branched amylopectin, and how fridge storage forms ordered starch domains.</desc>
+  <defs>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.25 0 0 0 0 0.9 0 0 0 0 0.65 0 0 0 0.55 0"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="blueGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.26 0 0 0 0 0.85 0 0 0 0 0.96 0 0 0 0.6 0"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <linearGradient id="panel" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#fff9ed"/>
+      <stop offset="1" stop-color="#eee3d0"/>
+    </linearGradient>
+    <linearGradient id="field" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#121518"/>
+      <stop offset="1" stop-color="#1c2024"/>
+    </linearGradient>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#f0b24a"/>
+    </marker>
+  </defs>
+
+  <rect width="1400" height="900" fill="url(#field)"/>
+  <g opacity="0.28">
+    <path d="M0 120H1400M0 240H1400M0 360H1400M0 480H1400M0 600H1400M0 720H1400" stroke="#b8f3ff" stroke-width="1"/>
+    <path d="M120 0V900M240 0V900M360 0V900M480 0V900M600 0V900M720 0V900M840 0V900M960 0V900M1080 0V900M1200 0V900M1320 0V900" stroke="#b8f3ff" stroke-width="1"/>
+  </g>
+
+  <text x="70" y="72" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="34" font-weight="760" fill="#f8f0db">Starch chains in tapioca</text>
+  <text x="70" y="112" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="18" fill="rgba(248,240,219,0.78)">Both are long polymers made from many glucose units. The difference is mostly shape: one is more linear, the other is heavily branched.</text>
+
+  <g transform="translate(54 160)">
+    <rect x="0" y="0" width="410" height="650" rx="18" fill="url(#panel)" stroke="rgba(255,255,255,0.28)"/>
+    <text x="34" y="56" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="30" font-weight="760" fill="#202422">Amylose</text>
+    <text x="34" y="88" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="15" fill="#617169">Mostly linear chain</text>
+    <path d="M72 228 C105 164, 168 164, 200 228 S296 292, 328 228 S360 164, 320 140 S230 142, 202 198 S116 252, 82 216" fill="none" stroke="#4fe0a1" stroke-width="10" stroke-linecap="round" filter="url(#glow)"/>
+    <path d="M84 392 C130 340, 188 338, 234 392 S322 446, 354 392" fill="none" stroke="#4fe0a1" stroke-width="10" stroke-linecap="round" opacity="0.72" filter="url(#glow)"/>
+    <g fill="#4fe0a1" stroke="#d9fff0" stroke-width="2" filter="url(#glow)">
+      <circle cx="78" cy="225" r="13"/><circle cx="111" cy="181" r="13"/><circle cx="159" cy="174" r="13"/><circle cx="199" cy="227" r="13"/>
+      <circle cx="242" cy="279" r="13"/><circle cx="296" cy="278" r="13"/><circle cx="328" cy="228" r="13"/><circle cx="350" cy="174" r="13"/>
+      <circle cx="315" cy="139" r="13"/><circle cx="263" cy="144" r="13"/><circle cx="205" cy="198" r="13"/><circle cx="146" cy="248" r="13"/>
+      <circle cx="92" cy="393" r="13"/><circle cx="139" cy="350" r="13"/><circle cx="198" cy="352" r="13"/><circle cx="242" cy="396" r="13"/>
+      <circle cx="300" cy="435" r="13"/><circle cx="351" cy="393" r="13"/>
+    </g>
+    <text x="34" y="536" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#202422">Think: one long noodle.</text>
+    <text x="34" y="570" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="15" fill="#617169">It can curl, tangle, hydrate, and later line up with nearby chains.</text>
+  </g>
+
+  <g transform="translate(495 160)">
+    <rect x="0" y="0" width="410" height="650" rx="18" fill="url(#panel)" stroke="rgba(255,255,255,0.28)"/>
+    <text x="34" y="56" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="30" font-weight="760" fill="#202422">Amylopectin</text>
+    <text x="34" y="88" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="15" fill="#617169">Branched chain network</text>
+    <g fill="none" stroke="#4fe0a1" stroke-width="9" stroke-linecap="round" filter="url(#glow)">
+      <path d="M204 480 C196 410, 194 350, 202 290 C210 232, 200 184, 168 132"/>
+      <path d="M200 318 C154 286, 110 244, 80 194"/>
+      <path d="M201 338 C252 310, 304 272, 342 216"/>
+      <path d="M196 398 C154 410, 112 442, 78 500"/>
+      <path d="M206 390 C252 420, 300 464, 338 528"/>
+      <path d="M168 132 C208 116, 244 100, 284 76"/>
+      <path d="M80 194 C116 178, 152 158, 180 128"/>
+      <path d="M342 216 C306 188, 278 152, 262 112"/>
+      <path d="M78 500 C116 496, 152 508, 194 538"/>
+      <path d="M338 528 C308 548, 274 574, 250 610"/>
+    </g>
+    <g fill="#4fe0a1" stroke="#d9fff0" stroke-width="2" filter="url(#glow)">
+      <circle cx="204" cy="480" r="12"/><circle cx="199" cy="421" r="12"/><circle cx="196" cy="360" r="12"/><circle cx="202" cy="290" r="12"/>
+      <circle cx="209" cy="232" r="12"/><circle cx="168" cy="132" r="12"/><circle cx="200" cy="318" r="12"/><circle cx="154" cy="286" r="12"/>
+      <circle cx="110" cy="244" r="12"/><circle cx="80" cy="194" r="12"/><circle cx="252" cy="310" r="12"/><circle cx="304" cy="272" r="12"/>
+      <circle cx="342" cy="216" r="12"/><circle cx="154" cy="410" r="12"/><circle cx="112" cy="442" r="12"/><circle cx="78" cy="500" r="12"/>
+      <circle cx="252" cy="420" r="12"/><circle cx="300" cy="464" r="12"/><circle cx="338" cy="528" r="12"/><circle cx="284" cy="76" r="12"/>
+      <circle cx="262" cy="112" r="12"/><circle cx="194" cy="538" r="12"/><circle cx="250" cy="610" r="12"/>
+    </g>
+    <text x="34" y="536" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#202422">Think: a branched shrub.</text>
+    <text x="34" y="570" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="15" fill="#617169">Tapioca starch is rich in amylopectin, which helps make boba elastic and chewy.</text>
+  </g>
+
+  <g transform="translate(936 160)">
+    <rect x="0" y="0" width="410" height="650" rx="18" fill="url(#panel)" stroke="rgba(255,255,255,0.28)"/>
+    <text x="34" y="56" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="30" font-weight="760" fill="#202422">Fridge state</text>
+    <text x="34" y="88" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="15" fill="#617169">Some chain segments reassociate</text>
+
+    <g fill="none" stroke="#4fe0a1" stroke-width="6" stroke-linecap="round" opacity="0.62">
+      <path d="M70 200 C116 160, 150 170, 190 212 S266 266, 334 214"/>
+      <path d="M68 342 C130 304, 188 328, 238 368 S312 402, 348 350"/>
+      <path d="M92 484 C150 444, 202 448, 250 486 S316 538, 356 486"/>
+    </g>
+    <g fill="#42d9f5" stroke="#d5fbff" stroke-width="2" filter="url(#blueGlow)">
+      <circle cx="78" cy="140" r="9"/><circle cx="328" cy="158" r="7"/><circle cx="96" cy="550" r="8"/>
+      <circle cx="338" cy="438" r="8"/><circle cx="196" cy="516" r="6"/><circle cx="260" cy="184" r="6"/>
+    </g>
+    <g transform="translate(96 228)" fill="#f0b24a" stroke="#ffe3a4" stroke-width="2" filter="url(#glow)">
+      <rect x="0" y="0" width="98" height="16" rx="3" transform="rotate(-8)"/>
+      <rect x="10" y="26" width="98" height="16" rx="3" transform="rotate(-8)"/>
+      <rect x="20" y="52" width="98" height="16" rx="3" transform="rotate(-8)"/>
+    </g>
+    <g transform="translate(224 384)" fill="#f0b24a" stroke="#ffe3a4" stroke-width="2" filter="url(#glow)">
+      <rect x="0" y="0" width="88" height="14" rx="3" transform="rotate(14)"/>
+      <rect x="-4" y="24" width="88" height="14" rx="3" transform="rotate(14)"/>
+      <rect x="-8" y="48" width="88" height="14" rx="3" transform="rotate(14)"/>
+    </g>
+    <path d="M198 300 C230 280, 258 280, 286 302" fill="none" stroke="#f0b24a" stroke-width="3" marker-end="url(#arrow)"/>
+    <text x="34" y="536" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#202422">Retrograded domains</text>
+    <text x="34" y="570" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="15" fill="#617169">Not extra particles. They are small ordered patches where starch chains line up and hold less mobile water.</text>
+  </g>
+</svg>
