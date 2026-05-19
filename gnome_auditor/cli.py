@@ -1,6 +1,6 @@
 """CLI entry points for the GNoME Auditor.
 
-Subcommands: ingest, validate, cross-ref, opus, stats
+Subcommands: ingest, validate, cross-ref, opus, stats, mlip-audit
 """
 
 import argparse
@@ -98,6 +98,12 @@ def cmd_stats(args):
     print()
 
 
+def cmd_mlip_audit(args):
+    """Run a small learned-potential relaxation audit."""
+    from gnome_auditor.mlip_audit import main as run_mlip_audit
+    run_mlip_audit(args)
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="GNoME Auditor — Chemistry-based validation of GNoME predictions",
@@ -126,6 +132,15 @@ def main():
     # stats
     sub = subparsers.add_parser("stats", help="Print database statistics")
     sub.set_defaults(func=cmd_stats)
+
+    # mlip-audit
+    sub = subparsers.add_parser(
+        "mlip-audit",
+        help="Run a small optional MLIP relaxation audit",
+    )
+    from gnome_auditor.mlip_audit import add_arguments as add_mlip_audit_arguments
+    add_mlip_audit_arguments(sub)
+    sub.set_defaults(func=cmd_mlip_audit)
 
     args = parser.parse_args()
     if not args.command:

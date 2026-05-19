@@ -57,6 +57,21 @@ python -m gnome_auditor.cli stats        # View pipeline results
 python -m gnome_auditor.analysis         # Generate calibration plots
 ```
 
+## MLIP Audit Pilot
+
+The `mlip-audit` command records lightweight relaxation provenance for CIF
+inputs. It treats learned-potential output as a screening signal, not ground
+truth.
+
+```bash
+source .venv/bin/activate
+pip install chgnet                       # optional CHGNet backend
+python -m gnome_auditor.cli mlip-audit --demo --backend dry-run
+python -m gnome_auditor.cli mlip-audit --demo --backend chgnet --max-steps 10
+```
+
+Results are written as JSONL under `data/mlip_audit/`.
+
 ## License
 
 Apache 2.0 (code). GNoME data under CC BY-NC 4.0 per [Google's terms](https://creativecommons.org/licenses/by-nc/4.0/).

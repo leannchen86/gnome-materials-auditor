@@ -14,3 +14,7 @@ anthropic>=0.79
 
 # Optional: Materials Project cross-referencing (needs MP_API_KEY)
 mp-api>=0.40
+
+# Optional: MLIP audit backend for relaxation smoke tests.
+# Install manually when needed because it pulls Torch:
+#   pip install chgnet
