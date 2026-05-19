@@ -72,6 +72,21 @@ python -m gnome_auditor.cli mlip-audit --demo --backend chgnet --max-steps 10
 
 Results are written as JSONL under `data/mlip_audit/`.
 
+## Dataset Hygiene Audit
+
+The `dataset-audit` command is the start of a more deterministic direction:
+boring dataset and benchmark hygiene checks for materials tables. It flags
+missing IDs, duplicate IDs, unparsable formulas, and invalid numeric fields in a
+stable JSONL issue format.
+
+```bash
+source .venv/bin/activate
+python -m gnome_auditor.cli dataset-audit --csv path/to/materials.csv \
+  --output data/dataset_hygiene_issues.jsonl
+```
+
+See `docs/dataset-hygiene-plan.md` for the plan and decision rules.
+
 ## License
 
 Apache 2.0 (code). GNoME data under CC BY-NC 4.0 per [Google's terms](https://creativecommons.org/licenses/by-nc/4.0/).

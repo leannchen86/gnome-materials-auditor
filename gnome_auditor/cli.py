@@ -1,6 +1,6 @@
 """CLI entry points for the GNoME Auditor.
 
-Subcommands: ingest, validate, cross-ref, opus, stats, mlip-audit
+Subcommands: ingest, validate, cross-ref, opus, stats, mlip-audit, dataset-audit
 """
 
 import argparse
@@ -104,6 +104,12 @@ def cmd_mlip_audit(args):
     run_mlip_audit(args)
 
 
+def cmd_dataset_audit(args):
+    """Run deterministic row-level dataset hygiene checks."""
+    from gnome_auditor.dataset_hygiene import main as run_dataset_audit
+    run_dataset_audit(args)
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="GNoME Auditor — Chemistry-based validation of GNoME predictions",
@@ -141,6 +147,15 @@ def main():
     from gnome_auditor.mlip_audit import add_arguments as add_mlip_audit_arguments
     add_mlip_audit_arguments(sub)
     sub.set_defaults(func=cmd_mlip_audit)
+
+    # dataset-audit
+    sub = subparsers.add_parser(
+        "dataset-audit",
+        help="Run deterministic materials dataset hygiene checks",
+    )
+    from gnome_auditor.dataset_hygiene import add_arguments as add_dataset_audit_arguments
+    add_dataset_audit_arguments(sub)
+    sub.set_defaults(func=cmd_dataset_audit)
 
     args = parser.parse_args()
     if not args.command:
