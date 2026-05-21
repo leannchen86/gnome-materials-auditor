@@ -137,6 +137,49 @@ h1 {
   overflow: hidden;
 }
 
+.modebar {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-bottom: 1px solid var(--line);
+}
+
+.modebar button {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 42px;
+  padding: 0 9px;
+  border: 0;
+  border-right: 1px solid var(--line);
+  color: var(--ink);
+  background: rgba(255, 253, 248, 0.72);
+  cursor: pointer;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 680;
+}
+
+.modebar button:last-child {
+  border-right: 0;
+}
+
+.modebar button:hover {
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.modebar button.active {
+  color: #fff;
+  background: var(--ink);
+}
+
+.modebar svg {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+}
+
 .control-body {
   display: grid;
   gap: 14px;
@@ -424,6 +467,18 @@ input[type="range"] {
     </div>
 
     <div class="controls" aria-label="State controls">
+      <div class="modebar" role="group" aria-label="Preset conditions">
+        <button class="mode active" type="button" data-mode="cooked">
+          <i data-lucide="flame"></i><span>Cooked</span>
+        </button>
+        <button class="mode" type="button" data-mode="fridge">
+          <i data-lucide="snowflake"></i><span>Fridge</span>
+        </button>
+        <button class="mode" type="button" data-mode="microwave">
+          <i data-lucide="waves"></i><span>Microwave</span>
+        </button>
+      </div>
+
       <div class="control-body">
         <div class="field">
           <label for="temperature">Temperature <span class="value" id="temperatureValue">72 deg C</span></label>
@@ -904,8 +959,15 @@ const outputs = {
   gradientValue: document.querySelector("#gradientValue")
 };
 
+const modeButtons = [...document.querySelectorAll(".mode")];
 const motionBtn = document.querySelector("#motionBtn");
 const resetBtn = document.querySelector("#resetBtn");
+
+const presets = {
+  cooked: { temperature: 72, hydration: 74, coldTime: 0 },
+  fridge: { temperature: 4, hydration: 48, coldTime: 14 },
+  microwave: { temperature: 82, hydration: 68, coldTime: 14 }
+};
 
 let animateMotion = true;
 let current = {
@@ -1003,10 +1065,35 @@ function updateReadout(state) {
 
 }
 
+function currentPresetKey() {
+  return Object.entries(presets).find(([, preset]) => (
+    Number(inputs.temperature.value) === preset.temperature
+    && Number(inputs.hydration.value) === preset.hydration
+    && Number(inputs.coldTime.value) === preset.coldTime
+  ))?.[0] ?? null;
+}
+
+function updatePresetButtons(activeMode = currentPresetKey()) {
+  modeButtons.forEach((button) => {
+    button.classList.toggle("active", button.dataset.mode === activeMode);
+  });
+}
+
 function updateTargetFromInputs() {
   target = computeState();
   updateReadout(target);
+  updatePresetButtons();
 }
+
+modeButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const preset = presets[button.dataset.mode];
+    inputs.temperature.value = preset.temperature;
+    inputs.hydration.value = preset.hydration;
+    inputs.coldTime.value = preset.coldTime;
+    updateTargetFromInputs();
+  });
+});
 
 Object.values(inputs).forEach((input) => {
   input.addEventListener("input", updateTargetFromInputs);
@@ -1161,6 +1248,7 @@ target = computeState();
 current = { ...target };
 handleResize();
 updateReadout(target);
+updatePresetButtons();
 animate();
 
 if (window.lucide) {
