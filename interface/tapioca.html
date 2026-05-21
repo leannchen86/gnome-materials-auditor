@@ -338,31 +338,66 @@ input[type="range"] {
   position: absolute;
   left: 22px;
   bottom: 22px;
-  width: min(760px, calc(100vw - 44px));
   pointer-events: auto;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  display: flex;
   gap: 8px;
+  z-index: 4;
 }
 
 .chip {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 8px;
-  min-height: 40px;
-  padding: 9px 10px;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 50%;
   background: rgba(255, 249, 237, 0.84);
   backdrop-filter: blur(14px);
   box-shadow: 0 8px 24px rgba(40, 38, 33, 0.1);
+}
+
+.chip::after {
+  content: attr(data-label);
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 10px);
+  width: max-content;
+  max-width: 220px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  background: rgba(255, 249, 237, 0.95);
+  box-shadow: 0 10px 26px rgba(40, 38, 33, 0.18);
   font-size: 12px;
-  color: var(--muted);
+  font-weight: 680;
+  line-height: 1.2;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(4px);
+  transition: opacity 140ms ease, transform 140ms ease;
+  white-space: nowrap;
+}
+
+.chip:hover::after,
+.chip:focus::after,
+.chip:focus-visible::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.chip:focus,
+.chip:focus-visible {
+  outline: 2px solid rgba(66, 217, 245, 0.75);
+  outline-offset: 3px;
 }
 
 .swatch {
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   flex: 0 0 auto;
 }
@@ -398,11 +433,6 @@ input[type="range"] {
     width: min(440px, calc(100vw - 44px));
   }
 
-  .legend {
-    position: static;
-    margin-top: 14px;
-  }
-
   .shell {
     overflow: auto;
     max-height: 100dvh;
@@ -423,8 +453,7 @@ input[type="range"] {
   }
 
   .controls,
-  .readout,
-  .legend {
+  .readout {
     width: calc(100vw - 48px);
     max-width: 440px;
   }
@@ -457,10 +486,6 @@ input[type="range"] {
     display: block;
     width: 100%;
     margin-top: 7px;
-  }
-
-  .legend {
-    grid-template-columns: 1fr;
   }
 }
 </style>
@@ -543,9 +568,9 @@ input[type="range"] {
   </section>
 
   <section class="legend" aria-label="Visual key">
-    <div class="chip"><span class="swatch chain"></span>Starch polymer chains</div>
-    <div class="chip"><span class="swatch water"></span>Mobile water tracers</div>
-    <div class="chip"><span class="swatch gradient"></span>Moisture-stiffness gradient</div>
+    <div class="chip" role="img" tabindex="0" aria-label="Starch polymer chains" data-label="Starch polymer chains"><span class="swatch chain"></span></div>
+    <div class="chip" role="img" tabindex="0" aria-label="Mobile water tracers" data-label="Mobile water tracers"><span class="swatch water"></span></div>
+    <div class="chip" role="img" tabindex="0" aria-label="Moisture-stiffness gradient" data-label="Moisture-stiffness gradient"><span class="swatch gradient"></span></div>
   </section>
 </main>
 
