@@ -334,85 +334,41 @@ input[type="range"] {
   line-height: 1.42;
 }
 
-.legend {
-  position: absolute;
-  left: 22px;
-  bottom: 22px;
-  pointer-events: auto;
-  display: flex;
-  gap: 8px;
-  z-index: 4;
-}
-
-.chip {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  background: rgba(255, 249, 237, 0.84);
-  backdrop-filter: blur(14px);
-  box-shadow: 0 8px 24px rgba(40, 38, 33, 0.1);
-}
-
-.chip::after {
-  content: attr(data-label);
-  position: absolute;
+.scene-tooltip {
+  position: fixed;
   left: 0;
-  bottom: calc(100% + 10px);
-  width: max-content;
-  max-width: 220px;
-  padding: 8px 10px;
+  top: 0;
+  z-index: 8;
+  max-width: 250px;
+  padding: 9px 11px;
   border: 1px solid var(--line);
   border-radius: 8px;
   color: var(--ink);
   background: rgba(255, 249, 237, 0.95);
-  box-shadow: 0 10px 26px rgba(40, 38, 33, 0.18);
-  font-size: 12px;
-  font-weight: 680;
-  line-height: 1.2;
-  opacity: 0;
+  box-shadow: 0 12px 30px rgba(40, 38, 33, 0.2);
+  backdrop-filter: blur(14px);
   pointer-events: none;
-  transform: translateY(4px);
-  transition: opacity 140ms ease, transform 140ms ease;
-  white-space: nowrap;
+  opacity: 0;
+  transform: translate3d(-999px, -999px, 0);
+  transition: opacity 120ms ease;
 }
 
-.chip:hover::after,
-.chip:focus::after,
-.chip:focus-visible::after {
+.scene-tooltip.visible {
   opacity: 1;
-  transform: translateY(0);
 }
 
-.chip:focus,
-.chip:focus-visible {
-  outline: 2px solid rgba(66, 217, 245, 0.75);
-  outline-offset: 3px;
+.scene-tooltip b {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 12px;
+  line-height: 1.2;
 }
 
-.swatch {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  flex: 0 0 auto;
-}
-
-.swatch.chain {
-  background: var(--gel);
-}
-
-.swatch.water {
-  background: var(--water);
-}
-
-.swatch.gradient {
-  border-radius: 999px;
-  background: linear-gradient(90deg, var(--water), var(--gradient), var(--stress));
+.scene-tooltip span {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.35;
 }
 
 @media (max-width: 820px) {
@@ -566,13 +522,8 @@ input[type="range"] {
       <p id="stateNote" class="note"></p>
     </aside>
   </section>
-
-  <section class="legend" aria-label="Visual key">
-    <div class="chip" role="img" tabindex="0" aria-label="Starch polymer chains" data-label="Starch polymer chains"><span class="swatch chain"></span></div>
-    <div class="chip" role="img" tabindex="0" aria-label="Mobile water tracers" data-label="Mobile water tracers"><span class="swatch water"></span></div>
-    <div class="chip" role="img" tabindex="0" aria-label="Moisture-stiffness gradient" data-label="Moisture-stiffness gradient"><span class="swatch gradient"></span></div>
-  </section>
 </main>
+<div class="scene-tooltip" id="sceneTooltip" aria-hidden="true"></div>
 
 <script type="module">
 import * as THREE from "three";
@@ -636,6 +587,22 @@ controls.maxDistance = 12;
 controls.autoRotate = true;
 controls.autoRotateSpeed = 0.34;
 controls.target.set(0, 0, 0);
+
+const sceneTooltip = document.querySelector("#sceneTooltip");
+const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector2(-2, -2);
+raycaster.params.Line.threshold = 0.1;
+raycaster.params.Points.threshold = 0.16;
+
+const molecularHoverTargets = [];
+const surfaceHoverTargets = [];
+const tooltipState = {
+  x: 0,
+  y: 0,
+  active: false,
+  overUi: false,
+  key: ""
+};
 
 const pearlGroup = new THREE.Group();
 pearlGroup.rotation.set(-0.1, -0.3, 0.02);
@@ -751,7 +718,13 @@ const shellMaterial = new THREE.MeshPhysicalMaterial({
 const shell = new THREE.Mesh(new THREE.SphereGeometry(pearlRadius, 96, 64), shellMaterial);
 shell.castShadow = true;
 shell.receiveShadow = true;
+shell.userData.tooltip = {
+  key: "gradient",
+  title: "Moisture-stiffness gradient",
+  body: "The outer gel firms first during cold storage, so shell and core respond differently."
+};
 pearlGroup.add(shell);
+surfaceHoverTargets.push(shell);
 
 const pearlAura = new THREE.Mesh(new THREE.SphereGeometry(pearlRadius * 1.035, 96, 64), pearlAuraMaterial);
 pearlGroup.add(pearlAura);
@@ -878,7 +851,13 @@ for (let i = 0; i < chainCount; i += 1) {
   });
   const line = new THREE.Line(geometry, material);
   line.renderOrder = 4;
+  line.userData.tooltip = {
+    key: "chains",
+    title: "Starch polymer chains",
+    body: "Amylose and amylopectin chains become more aligned as the pearl cold-ages."
+  };
   chainGroup.add(line);
+  molecularHoverTargets.push(line);
   chainData.push({ soft, retro, line, phase: seed, laneIndex });
 }
 
@@ -953,6 +932,11 @@ const waterTracerMaterial = new THREE.ShaderMaterial({
 
 const waterTracerPoints = new THREE.Points(waterTracerGeometry, waterTracerMaterial);
 waterTracerPoints.renderOrder = 6;
+waterTracerPoints.userData.tooltip = {
+  key: "water",
+  title: "Mobile water tracers",
+  body: "Blue tracers show water mobility in the gel; motion drops when chains pack closer."
+};
 pearlGroup.add(waterTracerPoints);
 
 const waterTracerCoreGeometry = new THREE.SphereGeometry(0.045, 16, 10);
@@ -969,7 +953,9 @@ const waterTracerCoreMaterial = new THREE.MeshStandardMaterial({
 const waterTracerCores = new THREE.InstancedMesh(waterTracerCoreGeometry, waterTracerCoreMaterial, waterTracerCount);
 waterTracerCores.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
 waterTracerCores.renderOrder = 5;
+waterTracerCores.userData.tooltip = waterTracerPoints.userData.tooltip;
 pearlGroup.add(waterTracerCores);
+molecularHoverTargets.push(waterTracerPoints, waterTracerCores);
 
 const waterTracerObject = new THREE.Object3D();
 
@@ -1147,6 +1133,85 @@ resetBtn.addEventListener("click", () => {
   camera.position.set(0, 1.1, 8.6);
 });
 
+function setSceneTooltipContent(tooltip) {
+  if (tooltipState.key === tooltip.key) return;
+  tooltipState.key = tooltip.key;
+  const title = document.createElement("b");
+  title.textContent = tooltip.title;
+  const body = document.createElement("span");
+  body.textContent = tooltip.body;
+  sceneTooltip.replaceChildren(title, body);
+}
+
+function hideSceneTooltip() {
+  tooltipState.key = "";
+  sceneTooltip.classList.remove("visible");
+  sceneTooltip.setAttribute("aria-hidden", "true");
+  renderer.domElement.style.cursor = "";
+}
+
+function positionSceneTooltip() {
+  const gap = 16;
+  const margin = 12;
+  const width = sceneTooltip.offsetWidth;
+  const height = sceneTooltip.offsetHeight;
+  let left = tooltipState.x + gap;
+  let top = tooltipState.y + gap;
+
+  if (left + width > window.innerWidth - margin) {
+    left = tooltipState.x - width - gap;
+  }
+  if (top + height > window.innerHeight - margin) {
+    top = tooltipState.y - height - gap;
+  }
+
+  sceneTooltip.style.transform = `translate3d(${Math.max(margin, left)}px, ${Math.max(margin, top)}px, 0)`;
+}
+
+function nearestTooltipHit(targets) {
+  return raycaster
+    .intersectObjects(targets, false)
+    .find((hit) => hit.object.visible && hit.object.userData.tooltip);
+}
+
+function updateSceneHover() {
+  if (!tooltipState.active || tooltipState.overUi) {
+    hideSceneTooltip();
+    return;
+  }
+
+  raycaster.setFromCamera(pointer, camera);
+  const hit = nearestTooltipHit(molecularHoverTargets) || nearestTooltipHit(surfaceHoverTargets);
+  if (!hit) {
+    hideSceneTooltip();
+    return;
+  }
+
+  setSceneTooltipContent(hit.object.userData.tooltip);
+  sceneTooltip.setAttribute("aria-hidden", "false");
+  sceneTooltip.classList.add("visible");
+  renderer.domElement.style.cursor = "help";
+  positionSceneTooltip();
+}
+
+window.addEventListener("pointermove", (event) => {
+  const targetElement = event.target instanceof Element ? event.target : null;
+  tooltipState.overUi = Boolean(targetElement?.closest(".brand, .controls, .readout"));
+  tooltipState.active = true;
+  tooltipState.x = event.clientX;
+  tooltipState.y = event.clientY;
+  pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+  pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  updateSceneHover();
+});
+
+window.addEventListener("pointerleave", () => {
+  tooltipState.active = false;
+  hideSceneTooltip();
+});
+
+window.addEventListener("blur", hideSceneTooltip);
+
 function updateChains(time) {
   const retro = current.crystallinity;
   const water = current.waterMobility;
@@ -1253,6 +1318,7 @@ function animate() {
 
   pearlGroup.rotation.y += animateMotion ? 0.0014 : 0;
   controls.update();
+  updateSceneHover();
   composer.render();
   requestAnimationFrame(animate);
 }
