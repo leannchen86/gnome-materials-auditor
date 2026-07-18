@@ -1,8 +1,10 @@
-# Curious Materials
+# GNoME Materials Auditor
 
-DeepMind's GNoME neural net predicted 520k new materials. We let Claude Opus 4.6 go over 3k of them and ask the questions that 3k decent grad students would have asked!
+Audit and explore candidate materials from DeepMind's GNoME predictions with chemistry validators, Materials Project cross-references, and Claude-generated research questions.
 
-**The goal:** amplify researchers' judgment by surfacing the signals that matter — validation red flags, chemical family context, and targeted research questions — so they can focus on what to synthesize next, not on sifting through data. We use Claude's reasoning to spot patterns across related compounds and 68 parallel Claude Code subagents to generate 1,700 research questions at scale.
+The interactive frontend is called **Curious Materials**. It helps researchers triage GNoME candidates by surfacing validation red flags, chemical-family context, and targeted follow-up questions, so they can focus on what to synthesize next instead of sifting through raw prediction tables.
+
+This repo combines traditional chemistry checks with Claude-assisted question generation. In the current run, Claude Opus 4.6 reviewed 3,262 materials and 68 parallel Claude Code subagents generated 1,700 research questions at scale.
 
 ## Quick Start
 
@@ -10,11 +12,11 @@ DeepMind's GNoME neural net predicted 520k new materials. We let Claude Opus 4.6
 python3 -m http.server 8080 --directory interface
 ```
 
-Open `http://localhost:8080` in your browser and go to Materials tab
+Open `http://localhost:8080` in your browser and go to the Materials tab.
 
-## What Claude Opus 4.6 Asks
+## What The Auditor Checks
 
-For each material we first generate these 5 validations traditionally:
+For each material, the pipeline first runs these validation checks:
 
 | Validator | What it checks | Tier |
 |-----------|---------------|------|
@@ -24,7 +26,7 @@ For each material we first generate these 5 validations traditionally:
 | Bond Valence Sum (GII) | Global bond strain | 2 (uses DFT geometry) |
 | Space Group | Matches experimental databases | 2 |
 
-Then Claude Opus 4.6 goes over each material, looks at these validations and the **related materials**, and ask one question.
+Then Claude reviews each material, its validation results, and its **related materials** to generate a targeted research question.
 
 ## Project Structure
 
@@ -76,4 +78,4 @@ Results are written as JSONL under `data/mlip_audit/`.
 
 Apache 2.0 (code). GNoME data under CC BY-NC 4.0 per [Google's terms](https://creativecommons.org/licenses/by-nc/4.0/).
 
-Built for the Anthropic Claude Code Hackathon, Feb 2025.
+Built for the Anthropic Claude Code Hackathon, February 2025.
